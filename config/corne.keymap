@@ -27,12 +27,11 @@
                         #binding-cells = <0>;
                 };
 
-                layer1_or_ctrl_gui_left: hold_tap_l1 {
-                        compatible = "zmk,behavior-hold-tap";
-                        hold-trigger = <200>;  // Milliseconds before considering it a hold
-                        tapping-term-ms = <300>;  // Double-tap or tap timing window
-                        hold-behavior = <&mo 1>;
-                        tap-behavior = <&ctrl_gui_left>;
+                layer1_or_ctrl_gui_left: tap_dance_l1 {
+                        compatible = "zmk,behavior-tap-dance";
+                        #binding-cells = <0>;
+                        tapping-term-ms = <200>;
+                        bindings = <&mo 1 &ctrl_gui_left>;
                 };
 
                 ctrl_gui_right: mod_morph_right {
@@ -42,12 +41,11 @@
                         #binding-cells = <0>;
                 };
 
-                layer2_or_ctrl_gui_right: hold_tap_l2 {
-                        compatible = "zmk,behavior-hold-tap";
-                        hold-trigger = <200>;  // Milliseconds before considering it a hold
-                        tapping-term-ms = <300>;  // Double-tap or tap timing window
-                        hold-behavior = <&mo 2>;
-                        tap-behavior = <&ctrl_gui_right>;
+                layer2_or_ctrl_gui_right: tap_dance_l2 {
+                        compatible = "zmk,behavior-tap-dance";
+                        #binding-cells = <0>;
+                        tapping-term-ms = <200>;
+                        bindings = <&mo 2 &ctrl_gui_right>;
                 };
         };
 
