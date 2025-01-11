@@ -22,7 +22,6 @@
 
                 ctrl_gui_left: mod_morph_left {
                         compatible = "zmk,behavior-mod-morph";
-                        label = "CTRL+GUI+LEFT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
                         bindings = <&kp LEFT>;
                         #binding-cells = <0>;
@@ -30,7 +29,6 @@
 
                 layer1_or_ctrl_gui_left: hold_tap_l1 {
                         compatible = "zmk,behavior-hold-tap";
-                        label = "Layer 1 or CTRL+GUI+LEFT";
                         hold-trigger = <200>;  // Milliseconds before considering it a hold
                         tapping-term-ms = <300>;  // Double-tap or tap timing window
                         hold-behavior = <&mo 1>;
@@ -39,7 +37,6 @@
 
                 ctrl_gui_right: mod_morph_right {
                         compatible = "zmk,behavior-mod-morph";
-                        label = "CTRL+GUI+RIGHT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
                         bindings = <&kp RIGHT>;
                         #binding-cells = <0>;
@@ -47,7 +44,6 @@
 
                 layer2_or_ctrl_gui_right: hold_tap_l2 {
                         compatible = "zmk,behavior-hold-tap";
-                        label = "Layer 2 or CTRL+GUI+RIGHT";
                         hold-trigger = <200>;  // Milliseconds before considering it a hold
                         tapping-term-ms = <300>;  // Double-tap or tap timing window
                         hold-behavior = <&mo 2>;
