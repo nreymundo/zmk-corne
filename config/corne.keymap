@@ -20,32 +20,18 @@
                         bindings = <&kp>, <&kp>;
                 };
 
-                ctrl_gui_left: mod_morph_left {
-                        compatible = "zmk,behavior-mod-morph";
-                        mods = <(MOD_LCTL | MOD_LGUI)>;
-                        bindings = <&kp LEFT>;
-                        #binding-cells = <0>;
-                };
-
                 layer1_or_ctrl_gui_left: tap_dance_l1 {
                         compatible = "zmk,behavior-tap-dance";
                         #binding-cells = <0>;
                         tapping-term-ms = <200>;
-                        bindings = <&mo 1 &ctrl_gui_left>;
-                };
-
-                ctrl_gui_right: mod_morph_right {
-                        compatible = "zmk,behavior-mod-morph";
-                        mods = <(MOD_LCTL | MOD_LGUI)>;
-                        bindings = <&kp RIGHT>;
-                        #binding-cells = <0>;
+                        bindings = <&mo 1 &kp LC(LG(LEFT))>;
                 };
 
                 layer2_or_ctrl_gui_right: tap_dance_l2 {
                         compatible = "zmk,behavior-tap-dance";
                         #binding-cells = <0>;
                         tapping-term-ms = <200>;
-                        bindings = <&mo 2 &ctrl_gui_right>;
+                        bindings = <&mo 2 &kp LC(LG(RIGHT))>;
                 };
         };
 
