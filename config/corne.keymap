@@ -52,7 +52,6 @@
                         tap-behavior = <&ctrl_gui_right>;
                 };
         };
-        };
 
         keymap {
                 compatible = "zmk,keymap";
