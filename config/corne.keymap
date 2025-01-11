@@ -25,6 +25,7 @@
                         label = "CTRL+GUI+LEFT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
                         binding = <&kp LEFT>;
+                        #binding-cells = <0>;
                 };
 
                 layer1_or_ctrl_gui_left: hold_tap_l1 {
@@ -41,6 +42,7 @@
                         label = "CTRL+GUI+RIGHT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
                         binding = <&kp RIGHT>;
+                        #binding-cells = <0>;
                 };
 
                 layer2_or_ctrl_gui_right: hold_tap_l2 {
