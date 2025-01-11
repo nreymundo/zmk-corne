@@ -24,7 +24,7 @@
                         compatible = "zmk,behavior-mod-morph";
                         label = "CTRL+GUI+LEFT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
-                        binding = <&kp LEFT>;
+                        bindings = <&kp LEFT>;
                         #binding-cells = <0>;
                 };
 
@@ -41,7 +41,7 @@
                         compatible = "zmk,behavior-mod-morph";
                         label = "CTRL+GUI+RIGHT";
                         mods = <(MOD_LCTL | MOD_LGUI)>;
-                        binding = <&kp RIGHT>;
+                        bindings = <&kp RIGHT>;
                         #binding-cells = <0>;
                 };
 
