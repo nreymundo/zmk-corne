@@ -9,6 +9,12 @@
 #include <dt-bindings/zmk/bt.h>
 
 / {
+        kscan: kscan {
+                compatible = "zmk,kscan-gpio-matrix";
+                diode-direction = "col2row";
+                wakeup-source;
+        };
+
         behaviors {
                 rpi: require_prior_idle {
                         compatible = "zmk,behavior-hold-tap";
