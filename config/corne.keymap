@@ -49,7 +49,7 @@
                         bindings = <
    &kp ESC   &kp Q       &kp W       &kp E         &kp R                    &kp T       &kp Y   &kp U                     &kp I         &kp O       &kp P          &kp DEL
    &kp TAB   &rpi LGUI A &rpi LALT S &rpi LSHIFT D &rpi LCTL F              &kp G       &kp H   &rpi RCTL J               &rpi RSHIFT K &rpi RALT L &rpi RGUI SEMI &kp SQT
-   &kp LSHFT &kp Z       &kp X       &kp C         &kp V                    &kp B       &kp N   &kp M                     &kp COMMA     &kp DOT     &kp FSLH       &kp TILDE
+   &kp LSHFT &kp Z       &kp X       &kp C         &kp V                    &kp B       &kp N   &kp M                     &kp COMMA     &kp DOT     &kp FSLH       &kp GRAVE
                                      &kp LGUI      &layer1_or_ctrl_gui_left &kp SPACE   &kp RET &layer2_or_ctrl_gui_right &kp BSPC
                         >;
                 };
