@@ -25,20 +25,6 @@
                         require-prior-idle-ms = <125>;
                         bindings = <&kp>, <&kp>;
                 };
-
-                layer1_or_ctrl_gui_left: tap_dance_l1 {
-                        compatible = "zmk,behavior-tap-dance";
-                        #binding-cells = <0>;
-                        tapping-term-ms = <200>;
-                        bindings = <&mo 1 &kp LC(LG(LEFT))>;
-                };
-
-                layer2_or_ctrl_gui_right: tap_dance_l2 {
-                        compatible = "zmk,behavior-tap-dance";
-                        #binding-cells = <0>;
-                        tapping-term-ms = <200>;
-                        bindings = <&mo 2 &kp LC(LG(RIGHT))>;
-                };
         };
 
         keymap {
@@ -85,7 +71,8 @@
                     	     &trans   &to 0    &trans      &trans &to 0    &trans
                         >;
                 };
-                //Layer 1
+
+                //Layer 4
                 settings_layer {
                         display-name = "Settings";
                         bindings = <
@@ -96,11 +83,11 @@
                         >;
                 };
 
-                extra_2 {
+                extra_1 {
                         status = "reserved";
                 };
 
-                extra_3 {
+                extra_2 {
                         status = "reserved";
                 };
         };
