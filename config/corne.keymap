@@ -6,7 +6,8 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/bt.h> 
+#include <dt-bindings/zmk/pointing.h>
 
 / {
         kscan: kscan {
@@ -24,20 +25,6 @@
                         quick-tap-ms = <200>;
                         require-prior-idle-ms = <125>;
                         bindings = <&kp>, <&kp>;
-                };
-
-                layer1_or_ctrl_gui_left: tap_dance_l1 {
-                        compatible = "zmk,behavior-tap-dance";
-                        #binding-cells = <0>;
-                        tapping-term-ms = <200>;
-                        bindings = <&mo 1 &kp LC(LG(LEFT))>;
-                };
-
-                layer2_or_ctrl_gui_right: tap_dance_l2 {
-                        compatible = "zmk,behavior-tap-dance";
-                        #binding-cells = <0>;
-                        tapping-term-ms = <200>;
-                        bindings = <&mo 2 &kp LC(LG(RIGHT))>;
                 };
         };
 
@@ -57,10 +44,10 @@
                 lower_layer {
                         display-name = "Lower";
                         bindings = <
-   &kp TAB    &kp N1       &kp N2        &kp N3           &kp N4            &kp N5         &kp N6       &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-   &trans     &trans       &kp MOVE_LEFT &kp MOVE_DOWN    &kp MOVE_UP       &kp MOVE_RIGHT &kp LEFT     &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &kp LSHFT  &trans       &trans        &kp LC(LG(LEFT)) &kp LC(LG(RIGHT)) &kp LCLK       &kp MCLK     &kp RCLK &trans &trans    &trans &trans
-                          	         &kp LGUI         &trans            &kp SPACE      &kp RET      &tog 4   &kp RALT
+   &kp TAB    &kp N1       &kp N2         &kp N3            &kp N4             &kp N5            &kp N6     &kp N7    &kp N8    &kp N9    &kp N0 &kp BSPC
+   &trans     &trans       &mmv MOVE_LEFT &mmv MOVE_DOWN    &mmv MOVE_UP       &mmv MOVE_RIGHT   &kp LEFT   &kp DOWN  &kp UP    &kp RIGHT &trans &trans
+   &kp LSHFT  &trans       &trans         &kp LC(LG(LEFT))  &kp LC(LG(RIGHT))  &trans            &mkp LCLK  &mkp RCLK &mkp RCLK &trans    &trans &trans
+                          	          &kp LGUI          &trans             &kp SPACE         &kp RET    &tog 4    &kp RALT
                         >;
                 };
 
@@ -70,7 +57,7 @@
                         bindings = <
    &kp  TAB  &kp EXCL         &kp AT     &kp HASH    &kp DLLR       &kp PRCNT      &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
    &kp LCTRL &trans           &trans     &trans      &tog 3         &trans         &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-   &kp LSHFT &kp K_PLAY_PAUSE &kp K_PREV &kp K_NEXT  &kp K_VOL_DOWN &kp K_VOL_UP   &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
+   &kp LSHFT &kp C_PLAY_PAUSE &kp C_PREV &kp C_NEXT  &kp C_VOL_DN   &kp C_VOL_UP   &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
                     	                 &kp LGUI    &trans         &kp SPACE      &kp RET   &trans    &kp RALT
                         >;
                 };
@@ -85,7 +72,8 @@
                     	     &trans   &to 0    &trans      &trans &to 0    &trans
                         >;
                 };
-                //Layer 1
+
+                //Layer 4
                 settings_layer {
                         display-name = "Settings";
                         bindings = <
@@ -96,11 +84,11 @@
                         >;
                 };
 
-                extra_2 {
+                extra_1 {
                         status = "reserved";
                 };
 
-                extra_3 {
+                extra_2 {
                         status = "reserved";
                 };
         };
