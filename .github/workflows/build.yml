@@ -1,6 +1,17 @@
+---
 name: Build ZMK firmware
-on: [push, pull_request, workflow_dispatch]
+'on': [push, workflow_dispatch]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install yamllint
+        run: pip install --user yamllint
+      - name: Run yamllint
+        run: |
+          yamllint build.yaml config/west.yml .github/workflows/*.yml
   build:
+    needs: lint
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
