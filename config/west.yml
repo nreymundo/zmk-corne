@@ -2,8 +2,8 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    - name: m165437 # https://github.com/M165437/nice-view-gem
-      url-base: https://github.com/M165437 
+    - name: m165437  # https://github.com/M165437/nice-view-gem
+      url-base: https://github.com/M165437
   projects:
     - name: zmk
       remote: zmkfirmware
