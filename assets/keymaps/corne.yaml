@@ -38,8 +38,8 @@ layers:
   - /
   - ⎇
   - ⌃
-  - {t: ⎵, h: nav, s: _}
-  - {t: ↹, h: kb_utils}
+  - '&undertab'
+  - {t: ⎵, h: kb_utils}
   - {t: ⏎, h: num}
   - {t: ⌫, h: symb}
   - {t: ⇧, h: sticky}
@@ -81,7 +81,7 @@ layers:
   - END
   - FORWARD
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
