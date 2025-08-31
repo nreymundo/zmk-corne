@@ -72,8 +72,8 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - Ctl+Gui+←
+  - Sft+Gui+→
   - BACK
   - HOME
   - PG DN
