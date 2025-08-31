@@ -146,7 +146,7 @@
             bindings = <&kp GREATER_THAN>, <&arrow_func>;
         };
 
-        underspace: undertab {
+        undertab: undertab {
             compatible = "zmk,behavior-mod-morph";
             label = "UNDERTAB";
             bindings = <&lt 1 TAB>, <&kp UNDER>;
