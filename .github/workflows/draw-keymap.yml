@@ -8,7 +8,7 @@ on:
       - "config/*.keymap"
       - "config/*.dtsi"
       - "keymap_drawer.config.yaml"
-      - ".github/workflows/draw-keymaps.yml"
+      - ".github/workflows/draw-keymap.yml"
       - "assets/keymaps/keymap_drawer.config.yaml"
       # - 'boards/*/*/*.keymap'
 
