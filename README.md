@@ -2,13 +2,12 @@
 
 Most of this readme is a WIP. 
 
+##
+
+This branch is a copy of the [thrly-corne-zmk](https://github.com/thrly/thrly-corne-zmk/tree/master) layout by thrly. Looked good and figured I'd give it a shot. 
+
+All credits to them. 
 
 ## Layout
 
-![Default Layer](./assets/splitkb_aurora_corne_rev1_split_3x6_3_default_layer.png)
-
-![Lower Layer](./assets/splitkb_aurora_corne_rev1_split_3x6_3_lower_layer.png)
-
-![Raise Layer](./assets/splitkb_aurora_corne_rev1_split_3x6_3_raise_layer.png)
-
-![Function Layer](./assets/splitkb_aurora_corne_rev1_split_3x6_3_function_layer.png)
+![Keymaps](./assets/keymaps/corne.svg)

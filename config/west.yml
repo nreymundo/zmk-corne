@@ -1,10 +1,11 @@
----
 manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    - name: m165437  # https://github.com/M165437/nice-view-gem
+    - name: m165437
       url-base: https://github.com/M165437
+    - name: urob
+      url-base: https://github.com/urob
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -12,6 +13,9 @@ manifest:
       import: app/west.yml
     - name: nice-view-gem
       remote: m165437
+      revision: main
+    - name: zmk-helpers
+      remote: urob
       revision: main
   self:
     path: config
