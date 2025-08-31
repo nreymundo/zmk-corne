@@ -38,7 +38,7 @@ layers:
   - /
   - ⎇
   - ⌃
-  - {t: ↹, h: nav, s: _}
+  - '&undertab'
   - {t: ⎵, h: kb_utils}
   - {t: ⏎, h: num}
   - {t: ⌫, h: symb}
@@ -81,7 +81,7 @@ layers:
   - END
   - FORWARD
   - {t: ▽, type: trans}
-  - {type: held}
+  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -178,7 +178,7 @@ layers:
   - ''
   - ''
   - ''
-  - ''
+  - Sft+Ctl+Gui+4
   - ''
   - LClk
   - RClk
