@@ -4,7 +4,6 @@
  * SPDX-License-Identifier: MIT
  */
 
-
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 800  // default: 600
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
 
@@ -168,19 +167,19 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp LMETA  &kp Q         &kp W            &kp E              &kp R         &kp T        &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
-&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G        &kp H      &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
-&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B        &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
-                                          &kp LCTRL          &undertab     &lt 4 SPACE  &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
+&kp LMETA  &kp Q         &kp W            &kp E              &kp R         &kp T          &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
+&kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G          &kp H      &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
+&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B          &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
+                                          &kp LCTRL          &undertab     &lt 4 SPACE    &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
             >;
         };
 
         nav_layer {
             bindings = <
-&trans  &trans    &trans    &trans          &trans            &trans    &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &mkp RCLK
-&trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans    &kp K_APPLICATION  &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT        &kp K_CMENU
-&trans  &trans    &trans    &trans          &trans            &trans    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
-                            &trans          &trans            &trans    &trans             &trans          &trans
+&trans  &trans    &trans    &trans          &trans            &trans               &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &mkp RCLK
+&trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans               &kp K_APPLICATION  &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT        &kp K_CMENU
+&trans  &trans    &trans    &trans          &kp LC(LG(LEFT))  &kp LS(LG(RIGHT))    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
+                            &trans          &trans            &trans               &trans             &trans          &trans
             >;
         };
 
