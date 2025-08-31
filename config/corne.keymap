@@ -178,7 +178,7 @@
             bindings = <
 &trans  &trans    &trans    &trans          &trans            &trans               &mkp LCLK          &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_UP  &mmv MOVE_RIGHT  &mkp RCLK
 &trans  &kp LGUI  &kp LALT  &kp LEFT_SHIFT  &kp LEFT_CONTROL  &trans               &kp K_APPLICATION  &kp LEFT        &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT        &kp K_CMENU
-&trans  &trans    &trans    &trans          &kp LC(LG(LEFT))  &kp LS(LG(RIGHT))    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
+&trans  &trans    &trans    &trans          &kp LC(LG(LEFT))  &kp LC(LG(RIGHT))    &mkp MB4           &kp HOME        &kp PAGE_DOWN   &kp PG_UP     &kp END          &mkp MB5
                             &trans          &trans            &trans               &trans             &trans          &trans
             >;
         };

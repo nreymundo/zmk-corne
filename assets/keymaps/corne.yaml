@@ -73,7 +73,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - Ctl+Gui+←
-  - Sft+Gui+→
+  - Ctl+Gui+→
   - BACK
   - HOME
   - PG DN
