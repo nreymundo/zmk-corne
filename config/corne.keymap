@@ -167,10 +167,10 @@
             //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
 
             bindings = <
-&kp LMETA  &kp Q         &kp W            &kp E              &kp R         &kp T          &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
+&kp ESC    &kp Q         &kp W            &kp E              &kp R         &kp T          &kp Y      &kp U            &kp I               &kp O            &kp P                 &kp DELETE
 &kp LCTRL  &bhm LMETA A  &bhm LEFT_ALT S  &bhm LEFT_SHIFT D  &bhm LCTRL F  &kp G          &kp H      &bhm RCTRL J     &bhm RIGHT_SHIFT K  &bhm LEFT_ALT L  &bhm LMETA SEMICOLON  &kp SQT
-&sk LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B          &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
-                                          &kp LCTRL          &undertab     &lt 4 SPACE    &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
+&kp LSHFT  &kp Z         &kp X            &kp C              &kp V         &kp B          &kp N      &kp M            &kp COMMA           &kp DOT          &kp FSLH              &kp RIGHT_ALT
+                                          &kp LGUI           &undertab     &lt 4 SPACE    &lt 3 RET  &lt 2 BACKSPACE  &sk RIGHT_SHIFT
             >;
         };
 

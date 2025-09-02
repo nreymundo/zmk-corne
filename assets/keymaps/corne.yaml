@@ -1,7 +1,7 @@
 layout: {zmk_keyboard: corne}
 layers:
   default:
-  - ⌘
+  - ESC
   - Q
   - W
   - E
@@ -25,7 +25,7 @@ layers:
   - {t: L, h: ⎇}
   - {t: ;, h: ⌘, s: ':'}
   - ''''
-  - {t: ⇧, h: sticky}
+  - ⇧
   - Z
   - X
   - C
@@ -37,7 +37,7 @@ layers:
   - {t: ., s: '>'}
   - /
   - ⎇
-  - ⌃
+  - ⌘
   - {t: ↹, h: nav, s: _}
   - {t: ⎵, h: kb_utils}
   - {t: ⏎, h: num}
