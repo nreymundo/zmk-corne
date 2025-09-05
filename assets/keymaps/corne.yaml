@@ -165,7 +165,7 @@ layers:
   - Sft+8
   - Sft+9
   - Sft+0
-  - {t: ▽, type: trans}
+  - ⎇
   - {t: ▽, type: trans}
   - _
   - {t: ▽, type: trans}
@@ -219,9 +219,6 @@ combos:
 - p: [17, 18]
   k: ⇪ WORD
   l: [default]
-- p: [1, 2]
-  k: ESC
-  l: [default]
 - p: [11, 23]
   k: 'VOL
 
@@ -238,19 +235,6 @@ combos:
 - p: [10, 9]
   k: ⌦
   l: [default]
-- p: [7, 8]
-  k: _
-  l: [default]
-- p: [4, 3]
-  k: '-'
-  l: [default]
-- p: [2, 3, 4]
-  k: '---'
-  l: [default]
-- p: [1, 4, 7, 10]
-  k: F19
-  l: [default]
-  hidden: true
 - p: [7, 19]
   k: ''''
   l: [default]
