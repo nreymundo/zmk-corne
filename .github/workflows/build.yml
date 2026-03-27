@@ -3,5 +3,8 @@ name: Build ZMK firmware
 'on': [push, workflow_dispatch]
 
 jobs:
-  build:
+  build-corne:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    with:
+      build_matrix_path: zmk/corne/build.yaml
+      config_path: zmk/corne
