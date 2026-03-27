@@ -1,3 +1,4 @@
+ ---
 name: Build ZMK firmware
 on: [push, workflow_dispatch]
 
@@ -42,7 +43,11 @@ jobs:
           echo "extra_west_args=${extra_west_args}" >> $GITHUB_ENV
           echo "extra_cmake_args=${shield:+-DSHIELD=\"$shield\"}" >> $GITHUB_ENV
           echo "display_name=${shield:+$shield - }${board}" >> $GITHUB_ENV
-          echo "artifact_name=${{ matrix.artifact-name:-${shield:+$shield-}${board//\//_}-zmk }}" >> $GITHUB_ENV
+          artifact_name="${{ matrix.artifact-name }}"
+          if [ -z "$artifact_name" ]; then
+            artifact_name="${shield:+$shield-}${board//\//_}-zmk"
+          fi
+          echo "artifact_name=$artifact_name" >> $GITHUB_ENV
 
       - name: Cache west modules
         uses: actions/cache@v4
@@ -97,7 +102,11 @@ jobs:
     needs: build
     name: Merge Output Artifacts
     steps:
-      - uses: actions/upload-artifact/merge@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: firmware
+          merge-multiple: true
+      - uses: actions/upload-artifact@v4
         with:
           name: firmware
-          delete-merged: true
+          path: firmware
