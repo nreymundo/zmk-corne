@@ -1,13 +1,22 @@
-# ZMK Config for my Corne keyboard
+# Keyboard configs
 
-Most of this readme is a WIP. 
+Personal keyboard configurations. Each keyboard lives under a firmware-specific directory (e.g. `zmk/<keyboard>/`) with its own keymap, board config, and build matrix.
 
-##
+## Structure
 
-This branch is a copy of the [thrly-corne-zmk](https://github.com/thrly/thrly-corne-zmk/tree/master) layout by thrly. Looked good and figured I'd give it a shot. 
+```
+zmk/
+├── corne/       # Corne 42-key split
+│   ├── build.yaml     # Build matrix (board + shield pairs)
+│   ├── west.yml       # West manifest (ZMK + modules)
+│   ├── corne.keymap   # Keymap definition
+│   ├── corne.conf     # Kconfig options
+│   └── corne.dtsi     # Devicetree overlay
+```
 
-All credits to them. 
+## CI
 
-## Layout
+Every push to `master` (or manual trigger) runs two workflows:
 
-![Keymaps](./assets/keymaps/corne.svg)
+- **Build firmware** — Calls the [ZMK reusable workflow](https://github.com/zmkfirmware/zmk) per keyboard. Each entry in a keyboard's `build.yaml` produces a firmware artifact (e.g. `corne_left`, `corne_right`) ready to flash.
+- **Draw keymaps** — When a `.keymap` or `.dtsi` changes, [keymap-drawer](https://github.com/caksoylar/keymap-drawer) parses the keymaps and commits updated SVG visualizations to `assets/keymaps/`.
