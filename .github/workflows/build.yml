@@ -64,29 +64,29 @@ jobs:
             ${{ runner.os }}-zmk-modules-
 
       - name: West Init
-        run: west init -l "${{ github.workspace }}/zmk/corne"
+        run: west init -l "$GITHUB_WORKSPACE/zmk/corne"
 
       - name: West Update
-        working-directory: ${{ github.workspace }}/zmk
+        working-directory: zmk
         run: west update --fetch-opt=--filter=tree:0
 
       - name: West Zephyr export
-        working-directory: ${{ github.workspace }}/zmk
+        working-directory: zmk
         run: west zephyr-export
 
       - name: West Build (${{ env.display_name }})
-        working-directory: ${{ github.workspace }}/zmk
-        run: west build -s zmk/app -d "${{ env.build_dir }}" -b "${{ matrix.board }}" ${{ env.extra_west_args }} -- -DZMK_CONFIG=${{ github.workspace }}/zmk/corne ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
+        working-directory: zmk
+        run: west build -s zmk/app -d "$build_dir" -b "${{ matrix.board }}" ${{ env.extra_west_args }} -- -DZMK_CONFIG=$GITHUB_WORKSPACE/zmk/corne ${{ env.extra_cmake_args }} ${{ matrix.cmake-args }}
 
       - name: Rename artifacts
         if: always()
         run: |
-          if [ -f "${{ env.build_dir }}/zephyr/zmk.uf2" ]; then
-            cp "${{ env.build_dir }}/zephyr/zmk.uf2" "${{ env.artifact_name }}.uf2"
-          elif [ -f "${{ env.build_dir }}/zephyr/zmk.hex" ]; then
-            cp "${{ env.build_dir }}/zephyr/zmk.hex" "${{ env.artifact_name }}.hex"
+          if [ -f "$build_dir/zephyr/zmk.uf2" ]; then
+            cp "$build_dir/zephyr/zmk.uf2" "$artifact_name.uf2"
+          elif [ -f "$build_dir/zephyr/zmk.hex" ]; then
+            cp "$build_dir/zephyr/zmk.hex" "$artifact_name.hex"
           else
-            cp "${{ env.build_dir }}/zephyr/zmk.bin" "${{ env.artifact_name }}.bin" 2>/dev/null || true
+            cp "$build_dir/zephyr/zmk.bin" "$artifact_name.bin" 2>/dev/null || true
           fi
 
       - name: Archive (${{ env.display_name }})
