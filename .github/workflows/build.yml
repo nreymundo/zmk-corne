@@ -130,8 +130,10 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          from textwrap import dedent
 
           overlay = Path("nice-view-gem/boards/shields/nice_view_gem/nice_view_gem.overlay")
+          output = Path("nice-view-gem/boards/shields/nice_view_gem/widgets/output.c")
           if not overlay.exists():
               raise SystemExit(0)
           text = overlay.read_text()
@@ -175,6 +177,50 @@ jobs:
 
           if "nice_view_spi: &spi0" not in text:
               overlay.write_text(patch + text)
+
+          if output.exists():
+              output_text = output.read_text()
+              old = dedent('''
+                  switch (state->selected_endpoint.transport) {
+                  case ZMK_TRANSPORT_USB:
+                      draw_usb_connected(canvas);
+                      break;
+
+                  case ZMK_TRANSPORT_BLE:
+                      if (state->active_profile_bonded) {
+                          if (state->active_profile_connected) {
+                              draw_ble_connected(canvas);
+                          } else {
+                              draw_ble_disconnected(canvas);
+                          }
+                      } else {
+                          draw_ble_unbonded(canvas);
+                      }
+                      break;
+                  }
+              ''').lstrip('\n')
+              new = dedent('''
+                  switch (state->selected_endpoint.transport) {
+                  case ZMK_TRANSPORT_USB:
+                      draw_usb_connected(canvas);
+                      break;
+
+                  case ZMK_TRANSPORT_NONE:
+                  case ZMK_TRANSPORT_BLE:
+                      if (state->active_profile_bonded) {
+                          if (state->active_profile_connected) {
+                              draw_ble_connected(canvas);
+                          } else {
+                              draw_ble_disconnected(canvas);
+                          }
+                      } else {
+                          draw_ble_unbonded(canvas);
+                      }
+                      break;
+                  }
+              ''').lstrip('\n')
+              if old in output_text:
+                  output.write_text(output_text.replace(old, new))
           PY
 
       - name: West Zephyr export
