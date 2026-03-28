@@ -1,0 +1,15 @@
+/*
+ * Corne battery wiring that must be included from the keymap so it reaches
+ * the compiled devicetree even after display-specific overlays moved out of
+ * corne.dtsi during the Zephyr 4.1 migration.
+ */
+
+/ {
+    chosen {
+        zmk,battery = &vbatt;
+    };
+
+    vbatt: vbatt {
+        compatible = "zmk,battery-nrf-vddh";
+    };
+};

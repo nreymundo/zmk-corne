@@ -7,6 +7,7 @@
 #define ZMK_POINTING_DEFAULT_MOVE_VAL 800  // default: 600
 #define ZMK_POINTING_DEFAULT_SCRL_VAL 20    // default: 10
 
+#include "corne-battery.dtsi"
 #include <zmk-helpers/key-labels/42.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
