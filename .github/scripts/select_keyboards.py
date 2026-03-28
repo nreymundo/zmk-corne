@@ -15,6 +15,8 @@ SHARED_TRIGGER_FILES = {
     ".github/scripts/select_keyboards.py",
 }
 
+NORMALIZED_SHARED_TRIGGER_FILES = {path.lstrip("./") for path in SHARED_TRIGGER_FILES}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -81,7 +83,7 @@ def select_keyboards(changed_paths: list[str], keyboards: list[str], all_keyboar
     if not normalized_paths:
         return [], "no_changed_files"
 
-    if any(path in SHARED_TRIGGER_FILES for path in normalized_paths):
+    if any(path in NORMALIZED_SHARED_TRIGGER_FILES for path in normalized_paths):
         return keyboards, "shared_change"
 
     known_keyboards = set(keyboards)
