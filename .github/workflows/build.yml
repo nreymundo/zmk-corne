@@ -110,6 +110,10 @@ jobs:
               status = "disabled";
           };
 
+          &oled {
+              status = "disabled";
+          };
+
           '''
 
           if "nice_view_spi: &spi0" not in text:
