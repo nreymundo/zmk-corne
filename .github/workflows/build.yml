@@ -206,6 +206,9 @@ jobs:
                       break;
 
                   case ZMK_TRANSPORT_NONE:
+                      draw_ble_disconnected(canvas);
+                      break;
+
                   case ZMK_TRANSPORT_BLE:
                       if (state->active_profile_bonded) {
                           if (state->active_profile_connected) {
@@ -221,6 +224,10 @@ jobs:
               ''').lstrip('\n')
               if old in output_text:
                   output.write_text(output_text.replace(old, new))
+                  output_text = output.read_text()
+
+              if 'case ZMK_TRANSPORT_NONE:\n        draw_ble_disconnected(canvas);\n        break;' not in output_text:
+                  raise SystemExit('Failed to patch nice-view-gem output.c for disconnected BLE rendering')
           PY
 
       - name: West Zephyr export
