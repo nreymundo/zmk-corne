@@ -25,7 +25,6 @@ zmk-corne/
         ├── <keyboard>.keymap     # Keymap definition
         ├── <keyboard>.conf       # Kconfig options
         ├── <keyboard>.dtsi       # Devicetree overlay — optional
-        ├── boards/shields/       # Optional local helper shields/overlays
         └── README.md             # Keyboard-specific info + layout image
 ```
 
