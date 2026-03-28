@@ -4,11 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "zmk/**"
-      - ".github/workflows/build.yml"
-      - ".github/workflows/draw-keymap.yml"
+      - "zmk/**/*.keymap"
       - "assets/keymaps/keymap_drawer.config.yaml"
-      - ".github/scripts/select_keyboards.py"
 
 jobs:
   select:
