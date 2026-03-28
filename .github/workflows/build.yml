@@ -200,6 +200,26 @@ jobs:
                       break;
                   }
               ''').lstrip('\n')
+              old_fallthrough = dedent('''
+                  switch (state->selected_endpoint.transport) {
+                  case ZMK_TRANSPORT_USB:
+                      draw_usb_connected(canvas);
+                      break;
+
+                  case ZMK_TRANSPORT_NONE:
+                  case ZMK_TRANSPORT_BLE:
+                      if (state->active_profile_bonded) {
+                          if (state->active_profile_connected) {
+                              draw_ble_connected(canvas);
+                          } else {
+                              draw_ble_disconnected(canvas);
+                          }
+                      } else {
+                          draw_ble_unbonded(canvas);
+                      }
+                      break;
+                  }
+              ''').lstrip('\n')
               new = dedent('''
                   switch (state->selected_endpoint.transport) {
                   case ZMK_TRANSPORT_USB:
@@ -225,6 +245,9 @@ jobs:
               ''').lstrip('\n')
               if old in output_text:
                   output.write_text(output_text.replace(old, new))
+                  output_text = output.read_text()
+              elif old_fallthrough in output_text:
+                  output.write_text(output_text.replace(old_fallthrough, new))
                   output_text = output.read_text()
 
               if not re.search(
