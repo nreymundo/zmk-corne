@@ -4,14 +4,72 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "zmk/**/*.keymap"
-      - "zmk/**/*.dtsi"
+      - "zmk/**"
+      - ".github/workflows/build.yml"
       - ".github/workflows/draw-keymap.yml"
       - "assets/keymaps/keymap_drawer.config.yaml"
+      - ".github/scripts/select_keyboards.py"
 
 jobs:
+  select:
+    runs-on: ubuntu-latest
+    name: Select impacted keyboards
+    outputs:
+      selected_keyboards_json: ${{ steps.select.outputs.selected_keyboards_json }}
+      selected_keyboards: ${{ steps.select.outputs.selected_keyboards }}
+      primary_keyboard: ${{ steps.select.outputs.primary_keyboard }}
+      should_run: ${{ steps.select.outputs.should_run }}
+      reason: ${{ steps.select.outputs.reason }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - id: select
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 .github/scripts/select_keyboards.py --all-keyboards --github-output "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          before_sha="${{ github.event.before }}"
+          head_sha="${{ github.sha }}"
+          args=()
+
+          if [ "$before_sha" = "0000000000000000000000000000000000000000" ]; then
+            while IFS= read -r line; do
+              [ -n "$line" ] || continue
+              for field in $line; do
+                case "$field" in
+                  A|M|D|T|U|X|B|R*|C*) ;;
+                  *) args+=(--changed-file "$field") ;;
+                esac
+              done
+            done < <(git diff-tree --name-status -r "$head_sha")
+          else
+            while IFS= read -r line; do
+              [ -n "$line" ] || continue
+              for field in $line; do
+                case "$field" in
+                  A|M|D|T|U|X|B|R*|C*) ;;
+                  *) args+=(--changed-file "$field") ;;
+                esac
+              done
+            done < <(git diff --name-status -M "$before_sha" "$head_sha")
+          fi
+
+          python3 .github/scripts/select_keyboards.py "${args[@]}" --github-output "$GITHUB_OUTPUT"
+
+      - name: Selection summary
+        run: |
+          echo "Reason: ${{ steps.select.outputs.reason }}"
+          echo "Selected keyboards: ${{ steps.select.outputs.selected_keyboards_json }}"
+
   draw:
     runs-on: ubuntu-latest
+    needs: select
+    if: needs.select.outputs.should_run == 'true'
     permissions:
       contents: write
     steps:
@@ -27,7 +85,7 @@ jobs:
         run: pipx install west
 
       - name: West Init
-        run: west init -l "$GITHUB_WORKSPACE/zmk/corne"
+        run: west init -l "$GITHUB_WORKSPACE/zmk/${{ needs.select.outputs.primary_keyboard }}"
 
       - name: West Update
         working-directory: zmk
@@ -37,61 +95,41 @@ jobs:
 
       - name: Draw keymaps
         id: draw
+        shell: bash
+        env:
+          SELECTED_KEYBOARDS: ${{ needs.select.outputs.selected_keyboards }}
         run: |
-          get_args() {
-              local keyboard=$2
-              local output=()
-
-              eval set -- "$1"
-              for arg; do
-                  local key=${arg%%:*}
-                  local val=${arg#*:}
-                  if [ "$key" = "$keyboard" ]; then
-                      output+=("$val")
-                      break
-                  fi
-              done
-              echo "${output[@]}"
-          }
-
-          check_for_layout_args() {
-              local args=("$@")
-
-              for val in "-j" "--qmk-info-json" "-k" "--qmk-keyboard" "-z" "--zmk-keyboard" "-d" "--dts-layout" "--ortho-layout" "-n" "--cols-thumbs-notation"; do
-                  for item in "${args[@]}"; do
-                      if [ "$val" = "$item" ]; then return 0; fi
-                  done
-              done
-
-              return 1
-          }
-
           shopt -s nullglob extglob
 
           mkdir -p assets/keymaps
           config_path="assets/keymaps/keymap_drawer.config.yaml"
           [ -e "$config_path" ] && config_arg=(-c "$config_path") || config_arg=()
 
-          for keymap_file in zmk/**/*.keymap; do
-              keyboard=$(basename -s .keymap "$keymap_file")
+          IFS=',' read -r -a keyboards <<< "$SELECTED_KEYBOARDS"
 
-              IFS=" " read -r -a parse_args <<< "$(get_args "" "$keyboard")"
-              IFS=" " read -r -a draw_args <<< "$(get_args "" "$keyboard")"
-              IFS=" " read -r -a extra_keymap_yaml <<< "$(get_args "" "$keyboard")"
+          for keyboard in "${keyboards[@]}"; do
+            [ -n "$keyboard" ] || continue
 
-              if check_for_layout_args "${draw_args[@]}"; then
-                  :
-              elif [ -f "zmk/corne/${keyboard}.json" ]; then
-                  draw_args+=(-j "zmk/corne/${keyboard}.json")
-              else
-                  dts_candidates=({,*/}boards/*/*/${keyboard}-layout{,s}.dtsi)
-                  if [ ${#dts_candidates[@]} -gt 0 ]; then
-                      draw_args+=(-d "${dts_candidates[0]}")
-                  fi
+            keymap_file="zmk/$keyboard/$keyboard.keymap"
+            if [ ! -f "$keymap_file" ]; then
+              echo "Skipping $keyboard: missing $keymap_file"
+              continue
+            fi
+
+            draw_args=()
+            if [ "$keyboard" = "cradio" ]; then
+              draw_args+=( -k ferris_rotated )
+            elif [ -f "zmk/$keyboard/$keyboard.json" ]; then
+              draw_args+=( -j "zmk/$keyboard/$keyboard.json" )
+            else
+              dts_candidates=(zmk/$keyboard/boards/*/*/${keyboard}-layout{,s}.dtsi)
+              if [ ${#dts_candidates[@]} -gt 0 ]; then
+                draw_args+=( -d "${dts_candidates[0]}" )
               fi
+            fi
 
-              keymap "${config_arg[@]}" parse -z "$keymap_file" "${parse_args[@]}" >"assets/keymaps/$keyboard.yaml"
-              keymap "${config_arg[@]}" draw "assets/keymaps/$keyboard.yaml" "${extra_keymap_yaml[@]}" "${draw_args[@]}" >"assets/keymaps/$keyboard.svg"
+            keymap "${config_arg[@]}" parse -z "$keymap_file" >"assets/keymaps/$keyboard.yaml"
+            keymap "${config_arg[@]}" draw "assets/keymaps/$keyboard.yaml" "${draw_args[@]}" >"assets/keymaps/$keyboard.svg"
           done
 
       - name: Get last commit message
@@ -106,3 +144,13 @@ jobs:
           commit_options: "--amend --no-edit"
           push_options: "--force-with-lease"
           skip_fetch: true
+
+  noop:
+    runs-on: ubuntu-latest
+    needs: select
+    if: needs.select.outputs.should_run != 'true'
+    name: No affected keyboards
+    steps:
+      - run: |
+          echo "No keymap redraw required."
+          echo "Reason: ${{ needs.select.outputs.reason }}"

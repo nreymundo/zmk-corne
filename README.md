@@ -12,11 +12,17 @@ zmk/
 │   ├── corne.keymap   # Keymap definition
 │   ├── corne.conf     # Kconfig options
 │   └── corne.dtsi     # Devicetree overlay
+└── cradio/      # CRadio / Sweep-style 34-key split
+    ├── build.yaml
+    ├── west.yml
+    ├── cradio.keymap
+    ├── cradio.conf
+    └── README.md
 ```
 
 ## CI
 
-Every push to `master` (or manual trigger) runs two workflows:
+Pushes run two local workflows with keyboard-scoped selection:
 
-- **Build firmware** — Calls the custom workflow in `.github/workflows/build.yml` per keyboard. Each entry in a keyboard's `build.yaml` produces a firmware artifact (e.g. `corne_left`, `corne_right`) ready to flash.
-- **Draw keymaps** — When a `.keymap` or `.dtsi` changes, the local workflow in `.github/workflows/draw-keymap.yml` runs [keymap-drawer](https://github.com/caksoylar/keymap-drawer), updates west modules from `zmk/`, and commits refreshed SVG visualizations to `assets/keymaps/`.
+- **Build firmware** — The custom workflow in `.github/workflows/build.yml` builds only affected keyboards. Shared workflow/drawer-config changes and manual `workflow_dispatch` select all keyboards.
+- **Draw keymaps** — The local workflow in `.github/workflows/draw-keymap.yml` redraws only affected keyboards, with the same shared-file and manual-dispatch all-keyboards behavior.

@@ -75,18 +75,16 @@ include:
 
 ### 5. Wire up the build workflow
 
-Add a new build block in `.github/workflows/build.yml`. The workflow uses a custom build pipeline (not the ZMK reusable workflow) because nested `config_path` values like `zmk/<keyboard>` break the reusable workflow's west workspace resolution. Follow the existing `corne` pattern: add a matrix fetch step, a build step with `container: zmkfirmware/zmk-build-arm:stable`, and the west init/update/build sequence.
+No per-keyboard workflow block is needed. The custom workflow in `.github/workflows/build.yml` discovers keyboards from `zmk/*/build.yaml`, selects the affected keyboards from changed files, and builds only those keyboards. Shared workflow/config changes and manual dispatch select all keyboards.
 
 ### 6. Add keymap drawing (optional)
 
-If the keyboard has a keymap to visualize, update `.github/workflows/draw-keymap.yml`:
-- The `keymap_patterns: "zmk/**/*.keymap"` glob already picks up new keyboards automatically.
-- Update `json_path` if keymap-drawer needs per-keyboard parse context.
+If the keyboard has a keymap to visualize, no extra workflow block is needed. `.github/workflows/draw-keymap.yml` uses the same changed-keyboard selection and redraws only the affected keyboards. Add per-keyboard JSON/layout files only if keymap-drawer needs them.
 
 ## CI Behavior
 
-- **Build**: Every push to `master` (or manual trigger) builds firmware for all keyboards. Each produces downloadable artifacts (e.g. `corne_left.uf2`, `corne_right.uf2`).
-- **Draw keymaps**: Every push that touches a `.keymap` or `.dtsi` file under `zmk/` regenerates SVG visualizations in `assets/keymaps/` and amends them to the commit.
+- **Build**: Pushes and manual trigger run the custom build workflow. It selects affected keyboards from changed files and builds only those keyboards; shared workflow/drawer-config changes and manual dispatch select all keyboards.
+- **Draw keymaps**: Pushes and manual trigger run the local draw workflow. It redraws affected keyboards only, with the same shared-file and manual-dispatch all-keyboards behavior.
 
 ## CI Architecture Notes
 
@@ -94,4 +92,4 @@ If the keyboard has a keymap to visualize, update `.github/workflows/draw-keymap
 - **Custom keymap drawing workflow.** The `caksoylar/keymap-drawer` reusable `draw-zmk.yml` workflow has the same nested-workspace limitation for `west_config_path: zmk/corne`: `west init -l zmk/corne` creates the workspace under `zmk/`, but subsequent west commands run from the repo root. This repo's `.github/workflows/draw-keymap.yml` is local so it can run `west update` from `zmk/` before calling `keymap parse`/`keymap draw`.
 - **No `zephyr/module.yml`.** This file was removed because it triggered the reusable workflow's `/tmp/zmk-config/` copy path, which uses `mkdir` (not `mkdir -p`) and fails on nested directory structures. Local helper shields under `zmk/<keyboard>/boards/shields/` work via the keyboard config's west `self.path`, so `zephyr/module.yml` is still not needed.
 - **Container path resolution.** The build runs inside a Docker container (`zmkfirmware/zmk-build-arm:stable`). Inside container `run` steps, use `$GITHUB_WORKSPACE` (env var) instead of `${{ github.workspace }}` (expression). The expression resolves to the host path which differs from the container's mount point (`/__w/...`).
-- **Adding a keyboard.** Each keyboard needs its own `west.yml` with `self.path: zmk/<keyboard>` matching its actual directory path, and a corresponding build block in `.github/workflows/build.yml`.
+- **Adding a keyboard.** Each keyboard needs its own `west.yml` with `self.path: zmk/<keyboard>` matching its actual directory path and its own `build.yaml`. The shared workflows will discover it automatically.
