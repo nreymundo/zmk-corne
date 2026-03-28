@@ -17,6 +17,7 @@ jobs:
       contents: write # allow workflow to commit to the repo
     with:
       keymap_patterns: "zmk/**/*.keymap" # path to the keymaps to parse
+      west_config_path: "zmk/corne"
       config_path: "assets/keymaps/keymap_drawer.config.yaml" # config file, ignored if not exists
       output_folder: "assets/keymaps" # path to save produced SVG and keymap YAML files
       json_path: "zmk/corne"
