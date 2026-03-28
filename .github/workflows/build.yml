@@ -129,6 +129,7 @@ jobs:
         working-directory: zmk
         run: |
           python3 - <<'PY'
+          import re
           from pathlib import Path
           from textwrap import dedent
 
@@ -226,7 +227,10 @@ jobs:
                   output.write_text(output_text.replace(old, new))
                   output_text = output.read_text()
 
-              if 'case ZMK_TRANSPORT_NONE:\n        draw_ble_disconnected(canvas);\n        break;' not in output_text:
+              if not re.search(
+                  r'case\s+ZMK_TRANSPORT_NONE:\s+draw_ble_disconnected\(canvas\);\s+break;',
+                  output_text,
+              ):
                   raise SystemExit('Failed to patch nice-view-gem output.c for disconnected BLE rendering')
           PY
 
