@@ -19,4 +19,4 @@ zmk/
 Every push to `master` (or manual trigger) runs two workflows:
 
 - **Build firmware** — Calls the custom workflow in `.github/workflows/build.yml` per keyboard. Each entry in a keyboard's `build.yaml` produces a firmware artifact (e.g. `corne_left`, `corne_right`) ready to flash.
-- **Draw keymaps** — When a `.keymap` or `.dtsi` changes, [keymap-drawer](https://github.com/caksoylar/keymap-drawer) parses the keymaps and commits updated SVG visualizations to `assets/keymaps/`.
+- **Draw keymaps** — When a `.keymap` or `.dtsi` changes, the local workflow in `.github/workflows/draw-keymap.yml` runs [keymap-drawer](https://github.com/caksoylar/keymap-drawer), updates west modules from `zmk/`, and commits refreshed SVG visualizations to `assets/keymaps/`.

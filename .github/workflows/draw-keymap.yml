@@ -1,9 +1,8 @@
-# Use the keymap-drawer ZMK user config workflow
-# https://github.com/caksoylar/keymap-drawer#setting-up-an-automated-drawing-workflow
 name: Draw ZMK keymaps
+
 on:
-  workflow_dispatch: # can be triggered manually
-  push: # automatically run on changes to following paths
+  workflow_dispatch:
+  push:
     paths:
       - "zmk/**/*.keymap"
       - "zmk/**/*.dtsi"
@@ -12,18 +11,98 @@ on:
 
 jobs:
   draw:
-    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
+    runs-on: ubuntu-latest
     permissions:
-      contents: write # allow workflow to commit to the repo
-    with:
-      keymap_patterns: "zmk/**/*.keymap" # path to the keymaps to parse
-      west_config_path: "zmk/corne"
-      config_path: "assets/keymaps/keymap_drawer.config.yaml" # config file, ignored if not exists
-      output_folder: "assets/keymaps" # path to save produced SVG and keymap YAML files
-      json_path: "zmk/corne"
-      # extra_keymap_yaml: "${keyboard}: 'images/keymap-img/combos.yaml'"
-      parse_args: "" # map of extra args to pass to `keymap parse`, e.g. "corne:'-l Def Lwr Rse' cradio:''"
-      draw_args: "" # map of extra args to pass to `keymap draw`, e.g. "corne:'-k corne_rotated' cradio:'-k paroxysm'"
-      amend_commit: true # amend generated files to commit that produces them
-      fail_on_error: true
-      debug_mode: false
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+          submodules: recursive
+
+      - name: Install keymap-drawer
+        run: pipx install keymap-drawer
+
+      - name: Install west
+        run: pipx install west
+
+      - name: West Init
+        run: west init -l "$GITHUB_WORKSPACE/zmk/corne"
+
+      - name: West Update
+        working-directory: zmk
+        run: |
+          west config --local manifest.project-filter " -zmk,-zephyr"
+          west update --fetch-opt=--filter=tree:0
+
+      - name: Draw keymaps
+        id: draw
+        run: |
+          get_args() {
+              local keyboard=$2
+              local output=()
+
+              eval set -- "$1"
+              for arg; do
+                  local key=${arg%%:*}
+                  local val=${arg#*:}
+                  if [ "$key" = "$keyboard" ]; then
+                      output+=("$val")
+                      break
+                  fi
+              done
+              echo "${output[@]}"
+          }
+
+          check_for_layout_args() {
+              local args=("$@")
+
+              for val in "-j" "--qmk-info-json" "-k" "--qmk-keyboard" "-z" "--zmk-keyboard" "-d" "--dts-layout" "--ortho-layout" "-n" "--cols-thumbs-notation"; do
+                  for item in "${args[@]}"; do
+                      if [ "$val" = "$item" ]; then return 0; fi
+                  done
+              done
+
+              return 1
+          }
+
+          shopt -s nullglob extglob
+
+          mkdir -p assets/keymaps
+          config_path="assets/keymaps/keymap_drawer.config.yaml"
+          [ -e "$config_path" ] && config_arg=(-c "$config_path") || config_arg=()
+
+          for keymap_file in zmk/**/*.keymap; do
+              keyboard=$(basename -s .keymap "$keymap_file")
+
+              IFS=" " read -r -a parse_args <<< "$(get_args "" "$keyboard")"
+              IFS=" " read -r -a draw_args <<< "$(get_args "" "$keyboard")"
+              IFS=" " read -r -a extra_keymap_yaml <<< "$(get_args "" "$keyboard")"
+
+              if check_for_layout_args "${draw_args[@]}"; then
+                  :
+              elif [ -f "zmk/corne/${keyboard}.json" ]; then
+                  draw_args+=(-j "zmk/corne/${keyboard}.json")
+              else
+                  dts_candidates=({,*/}boards/*/*/${keyboard}-layout{,s}.dtsi)
+                  if [ ${#dts_candidates[@]} -gt 0 ]; then
+                      draw_args+=(-d "${dts_candidates[0]}")
+                  fi
+              fi
+
+              keymap "${config_arg[@]}" parse -z "$keymap_file" "${parse_args[@]}" >"assets/keymaps/$keyboard.yaml"
+              keymap "${config_arg[@]}" draw "assets/keymaps/$keyboard.yaml" "${extra_keymap_yaml[@]}" "${draw_args[@]}" >"assets/keymaps/$keyboard.svg"
+          done
+
+      - name: Get last commit message
+        id: last_commit_message
+        run: echo "msg=$(git log -1 --pretty=%s)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit updated images
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: "assets/keymaps/*.svg assets/keymaps/*.yaml"
+          commit_message: "${{ steps.last_commit_message.outputs.msg }}"
+          commit_options: "--amend --no-edit"
+          push_options: "--force-with-lease"
+          skip_fetch: true
