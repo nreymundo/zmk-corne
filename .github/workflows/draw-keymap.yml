@@ -9,6 +9,9 @@ on:
       - ".github/workflows/draw-keymap.yml"
       - "assets/keymaps/keymap_drawer.config.yaml"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   draw:
     runs-on: ubuntu-latest
