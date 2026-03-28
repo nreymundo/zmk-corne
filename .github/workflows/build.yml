@@ -181,74 +181,26 @@ jobs:
 
           if output.exists():
               output_text = output.read_text()
-              old = dedent('''
-                  switch (state->selected_endpoint.transport) {
-                  case ZMK_TRANSPORT_USB:
-                      draw_usb_connected(canvas);
-                      break;
-
-                  case ZMK_TRANSPORT_BLE:
-                      if (state->active_profile_bonded) {
-                          if (state->active_profile_connected) {
-                              draw_ble_connected(canvas);
-                          } else {
-                              draw_ble_disconnected(canvas);
-                          }
-                      } else {
-                          draw_ble_unbonded(canvas);
-                      }
-                      break;
-                  }
-              ''').lstrip('\n')
-              old_fallthrough = dedent('''
-                  switch (state->selected_endpoint.transport) {
-                  case ZMK_TRANSPORT_USB:
-                      draw_usb_connected(canvas);
-                      break;
-
-                  case ZMK_TRANSPORT_NONE:
-                  case ZMK_TRANSPORT_BLE:
-                      if (state->active_profile_bonded) {
-                          if (state->active_profile_connected) {
-                              draw_ble_connected(canvas);
-                          } else {
-                              draw_ble_disconnected(canvas);
-                          }
-                      } else {
-                          draw_ble_unbonded(canvas);
-                      }
-                      break;
-                  }
-              ''').lstrip('\n')
-              new = dedent('''
-                  switch (state->selected_endpoint.transport) {
-                  case ZMK_TRANSPORT_USB:
-                      draw_usb_connected(canvas);
-                      break;
-
-                  case ZMK_TRANSPORT_NONE:
-                      draw_ble_disconnected(canvas);
-                      break;
-
-                  case ZMK_TRANSPORT_BLE:
-                      if (state->active_profile_bonded) {
-                          if (state->active_profile_connected) {
-                              draw_ble_connected(canvas);
-                          } else {
-                              draw_ble_disconnected(canvas);
-                          }
-                      } else {
-                          draw_ble_unbonded(canvas);
-                      }
-                      break;
-                  }
-              ''').lstrip('\n')
-              if old in output_text:
-                  output.write_text(output_text.replace(old, new))
-                  output_text = output.read_text()
-              elif old_fallthrough in output_text:
-                  output.write_text(output_text.replace(old_fallthrough, new))
-                  output_text = output.read_text()
+              if not re.search(
+                  r'case\s+ZMK_TRANSPORT_NONE:\s+draw_ble_disconnected\(canvas\);\s+break;',
+                  output_text,
+              ):
+                  output_text, none_count = re.subn(
+                      r'case\s+ZMK_TRANSPORT_NONE:\s*case\s+ZMK_TRANSPORT_BLE:',
+                      'case ZMK_TRANSPORT_NONE:\n        draw_ble_disconnected(canvas);\n        break;\n\n    case ZMK_TRANSPORT_BLE:',
+                      output_text,
+                      count=1,
+                  )
+                  if none_count == 0:
+                      output_text, ble_count = re.subn(
+                          r'case\s+ZMK_TRANSPORT_BLE:',
+                          'case ZMK_TRANSPORT_NONE:\n        draw_ble_disconnected(canvas);\n        break;\n\n    case ZMK_TRANSPORT_BLE:',
+                          output_text,
+                          count=1,
+                      )
+                      if ble_count == 0:
+                          raise SystemExit('Failed to patch nice-view-gem output.c for disconnected BLE rendering')
+                  output.write_text(output_text)
 
               if not re.search(
                   r'case\s+ZMK_TRANSPORT_NONE:\s+draw_ble_disconnected\(canvas\);\s+break;',
