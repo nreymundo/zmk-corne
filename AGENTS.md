@@ -25,6 +25,7 @@ zmk-corne/
         ├── <keyboard>.keymap     # Keymap definition
         ├── <keyboard>.conf       # Kconfig options
         ├── <keyboard>.dtsi       # Devicetree overlay — optional
+        ├── boards/shields/       # Optional local helper shields/overlays
         └── README.md             # Keyboard-specific info + layout image
 ```
 
@@ -91,6 +92,6 @@ If the keyboard has a keymap to visualize, update `.github/workflows/draw-keymap
 ## CI Architecture Notes
 
 - **Custom build workflow, not the ZMK reusable one.** The ZMK reusable workflow (`zmkfirmware/zmk/.github/workflows/build-user-config.yml@main`) does not support nested `config_path` values like `zmk/corne`. It breaks at `west update` because `west init -l zmk/corne` creates the workspace at `zmk/` (one level up from the manifest), but the workflow runs `west update` from the repo root which is outside that workspace. The custom workflow in this repo handles this by running `west init` from the repo root and `west update` from the `zmk/` directory.
-- **No `zephyr/module.yml`.** This file was removed because it triggered the reusable workflow's `/tmp/zmk-config/` copy path, which uses `mkdir` (not `mkdir -p`) and fails on nested directory structures. It was only needed for custom shield definitions in `boards/shields/`, which are no longer used.
+- **No `zephyr/module.yml`.** This file was removed because it triggered the reusable workflow's `/tmp/zmk-config/` copy path, which uses `mkdir` (not `mkdir -p`) and fails on nested directory structures. Local helper shields under `zmk/<keyboard>/boards/shields/` work via the keyboard config's west `self.path`, so `zephyr/module.yml` is still not needed.
 - **Container path resolution.** The build runs inside a Docker container (`zmkfirmware/zmk-build-arm:stable`). Inside container `run` steps, use `$GITHUB_WORKSPACE` (env var) instead of `${{ github.workspace }}` (expression). The expression resolves to the host path which differs from the container's mount point (`/__w/...`).
 - **Adding a keyboard.** Each keyboard needs its own `west.yml` with `self.path: zmk/<keyboard>` matching its actual directory path, and a corresponding build block in `.github/workflows/build.yml`.
